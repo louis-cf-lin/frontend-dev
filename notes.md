@@ -1,0 +1,32 @@
+# Some Notes
+
+- `+` is the unary operator. Fastest and best way to convert a string to a number
+- `const` infers the assigned value itself as the type
+- Object types contain key-type pairs
+- 'Tuple' are **fixed-length**, **fixed-type** arrays
+  - Define using `variable: [type, type, ...]`
+  - `push()` is an exception to tuples
+  - Offers stricter structure than array
+- 'Enum' - automatically enumerated global constant identifiers
+  - Use when wanting human-readable identifiers with mapped values
+  - Assigns labels to values
+  - Values can be anything, but increment automatically if not specified
+- Capitalise custom types
+- `void` vs `undefined`
+  - `void` type when a function does not have a `return` statement
+  - `undefined` type when a function has a `return` statement but returns nothing
+  - Returning nothing and not having a `return` is the same thing in JavaScript but TypeScript makes a distinction
+  - `void` is the standard and usually inferred
+- `Function` types
+  - Can pass a function as a parameter while simultaneously specifying the function's inputs and outputs
+  - The parameter output can be `void` despite the passed function having an output (it just won't be used)
+- `unknown` is like `any` but stricter
+  - If you're not sure what a value might be but you know what you want to do with it eventually
+  - It's a better choice than `any`
+- `tsc -w` enters watch mode for all .tsc files
+- Default `lib` items:
+  - `dom`
+  - `es6`
+  - `dom.iterable`
+  - `scripthost`
+- `node_modules` is automatically excluded

@@ -1,0 +1,23 @@
+{
+  "name": "frontend-dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/louis-cf-lin/frontend-dev.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/louis-cf-lin/frontend-dev/issues"
+  },
+  "homepage": "https://github.com/louis-cf-lin/frontend-dev#readme",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
