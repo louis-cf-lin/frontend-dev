@@ -1209,6 +1209,256 @@ function isFish(pet: Fish | Bird): pet is Fish {
 
 ### Conditional types
 
+```typescript
+  interface Animal {
+    live(): void;
+  }
+  interface Dog extends Animal {
+    woof(): void;
+  }
+
+  type Example1 = Dog extends Animal ? number : string;
+  //   ^ = type Example1 = number
+```
+
+- Simplify overloads
+  - Overload:
+
+  ```typescript
+    interface IdLabel {
+      id: number;
+    }
+    interface NameLabel {
+      name: string;
+    }
+
+    function createLabel(id: number): IdLabel;
+    function createLabel(name: string): NameLabel;
+    function createLabel(nameOrId: string | number): IdLabel | NameLabel;
+    function createLabel(nameOrId: string | number): IdLabel | NameLabel {
+      throw "unimplemented";
+    }
+  ```
+
+  - Simplified:
+
+  ```typescript
+    type NameOrId<T extends number | string> = T extends number ? IdLabel : NameLabel;
+
+    function createLabel<T extends number | string>(idOrName: T): NameOrId<T> {
+      throw "unimplemented";
+    }
+
+    let a = createLabel("typescript");
+    //  ^ = let a: NameLabel
+
+    let b = createLabel(2.8);
+    //  ^ = let b: IdLabel
+
+    let c = createLabel(Math.random() ? "hello" : 42);
+    //  ^ = let c: NameLabel | IdLabel
+  ```
+
+- Conditional type constraints
+
+```typescript
+  type MessageOf<T extends { message: unknown }> = T["message"]; // `T` will always have `message` property
+
+  type MessageOf<T> = T extends { message: unknown } ? T["message"] : never; // `never` type assigned if `message` not available
+
+  // Another example
+  type Flatten<T> = T extends any[] ? T[number] : T;
+```
+
+- Inferring within conditional types (`infer`)
+
+```typescript
+  // Achieves the same as above
+  type Flatten<Type> = Type extends Array<infer Item> ? Item : Type;
+
+  // Output is the return type of a function
+  type GetReturnType<Type> = Type extends (...args: never[]) => infer Return ? Return : never;
+```
+
+### Mapped types
+
+- Generic type which uses a union created via a keyof to iterate through the keys of one type to create another
+
+```typescript
+  type OptionsFlags<Type> = {
+    [Property in keyof Type]: boolean;
+  };
+
+  type FeatureFlags = {
+    darkMode: () => void;
+    newUserProfile: () => void;
+  };
+
+  type FeatureOptions = OptionsFlags<FeatureFlags>;
+  //   ^ = type FeatureOptions = {
+  //       darkMode: boolean;
+  //       newUserProfile: boolean;
+  //   }
+```
+
+- Mapping modifiers
+  - `readonly` and `?`
+  - Prefix with `+` and `-`; assumes `+` if unspecified
+
+  ```typescript
+    type CreateMutable<Type> = {
+      -readonly [Property in keyof Type]: Type[Property]; // removes `readonly`
+    };
+
+    type LockedAccount = {
+      readonly id: string;
+      readonly name: string;
+    };
+
+    type UnlockedAccount = CreateMutable<LockedAccount>;
+    //   ^ = type UnlockedAccount = {
+    //       id: string;
+    //       name: string;
+    //   }
+
+    // Removes 'optional' attributes from a type's properties
+    type Concrete<Type> = {
+      [Property in keyof Type]-?: Type[Property]; // removes `?`
+    };
+  ```
+
+- Key remapping via `as`
+
+```typescript
+  type MappedTypeWithNewProperties<Type> = {
+    [Properties in keyof Type as NewKeyType]: Type[Properties]
+  }
+```
+
+- Using template literals
+
+```typescript
+  // Using template literal types
+  type Getters<Type> = {
+    [Property in keyof Type as `get${Capitalize<string & Property>}`]: () => Type[Property]
+  };
+
+  interface Person {
+    name: string;
+    age: number;
+    location: string;
+  }
+
+  type LazyPerson = Getters<Person>;
+  //   ^ = type LazyPerson = {
+  //       getName: () => string;
+  //       getAge: () => number;
+  //       getLocation: () => string;
+  //   }
+  ```
+
+- Filtering keys
+
+```typescript
+  // Remove the 'kind' property
+  type RemoveKindField<Type> = {
+    [Property in keyof Type as Exclude<Property, "kind">]: Type[Property]
+  };
+```
+
+- Conditional mapping
+
+```typescript
+  type ExtractPII<Type> = {
+    [Property in keyof Type]: Type[Property] extends { pii: true } ? true : false;
+  };
+
+  type DBFields = {
+    id: { format: "incrementing" };
+    name: { type: string; pii: true };
+  };
+
+  type ObjectsNeedingGDPRDeletion = ExtractPII<DBFields>;
+  //   ^ = type ObjectsNeedingGDPRDeletion = {
+  //       id: false;
+  //       name: true;
+  //   }
+```
+
+### Template literal types
+
+```typescript
+  type EmailLocaleIDs = "welcome_email" | "email_heading";
+  type FooterLocaleIDs = "footer_title" | "footer_sendoff";
+
+  type AllLocaleIDs = `${EmailLocaleIDs | FooterLocaleIDs}_id`; // every possible union
+  //   ^ = type AllLocaleIDs = "welcome_email_id" | "email_heading_id" | "footer_title_id" | "footer_sendoff_id"
+
+  type Lang = "en" | "ja" | "pt";
+  type LocaleMessageIDs = `${Lang}_${AllLocaleIDs}`; // cross-multiplied
+  //   ^ = type LocaleMessageIDs = "en_welcome_email_id" | "en_email_heading_id" | "en_footer_title_id" | "en_footer_sendoff_id" | "ja_welcome_email_id" | "ja_email_heading_id" | "ja_footer_title_id" | "ja_footer_sendoff_id" | "pt_welcome_email_id" | "pt_email_heading_id" | "pt_footer_title_id" | "pt_footer_sendoff_id"
+```
+
+- String union in types
+
+  ```typescript
+    type PropEventSource<Type> = {
+      on(eventName: `${string & keyof Type}Changed`, callback: (newValue: any) => void): void;
+    };
+
+    declare function makeWatchedObject<Type>(obj: Type): Type & PropEventSource<Type>;
+
+    const person = makeWatchedObject({
+      firstName: "Saoirse",
+      lastName: "Ronan",
+      age: 26
+    });
+    
+    person.on("firstNameChanged", () => {}); // OK
+    person.on("lastNameChanged", () => {}); // OK
+    person.on("ageChanged", () => {}); // OK
+  ```
+
+  - The example above used `any` in the callback
+  - Template literals types can infer from substitution positions
+
+  ```typescript
+    type PropEventSource<Type> = {
+      on<Key extends string & keyof Type> (eventName: `${Key}Changed`, callback: (newValue: Type[Key]) => void ): void;
+    };
+
+    declare function makeWatchedObject<Type>(obj: Type): Type & PropEventSource<Type>;
+
+    const person = makeWatchedObject({
+      firstName: "Saoirse",
+      lastName: "Ronan",
+      age: 26
+    });
+
+    person.on("firstNameChanged", newName => { // (parameter) newName: string
+      console.log(`new name is ${newName.toUpperCase()}`); // fine with strings
+    });
+
+    person.on("ageChanged", newAge => { // (parameter) newAge: number
+      if (newAge < 0) {
+        console.warn("warning! negative age"); // fine with numbers
+      }
+    })
+  ```
+
+- Intrinsic string manipulation types
+  - `Uppercase<StringType>` - converts each character in the string to the uppercase version
+  - `Lowercase<StringType>` - converts each character in the string to the lowercase equivalent
+  - `Capitalize<StringType>` - converts the first character in the string to an uppercase equivalent
+  - `Uncapitalize<StringType>` - converts the first character in the string to a lowercase equivalent
+
+## Classes
+
+TODO
+
+## Modules
+
+TODO
 
 ## Other Notes
 
