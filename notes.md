@@ -1458,7 +1458,186 @@ TODO
 
 ## Modules
 
-TODO
+### How JavaScript modules are defined
+
+- In TypeScript, any file containing `module` or `export` is considered a **module**
+- Otherwise, treated as a **script file** whose contents are available in the global scope (and modules)
+- Modules are executed within their own scope - variables, functions, classes, etc.:
+  - Declared in a module are not visible outside the module
+  - Must be explicitly exported
+  - Must import to consume from a different module
+
+### Non-modules
+
+- Variables and types declared in a script file are shared in the global scope
+- For a module that doesn't have any `import`s or `export`s:
+
+```typescript
+  export {};
+```
+
+### Modules in TypeScript
+
+- **Syntax**: what syntax will be used to import and export things?
+- **Module resolution**: what is the relationship between module names/paths and files on disk?
+- **Module output target**: what should the emitted JavaScript module look like?
+
+#### ES Module syntax
+
+- Exporting only one thing:
+
+  ```typescript
+    // @filename: hello.ts
+    export default function helloWorld() {
+      console.log("Hello, world!");
+    }
+  ```
+
+- Import:
+
+  ```typescript
+    import hello from "./hello.js"; // function can take on any name
+  ```
+
+- Exporting multiple variables, functions, classes, etc.
+
+  ```typescript
+    // @filename: maths.ts
+    export var pi = 3.14;
+    export let squareTwo = 1.41;
+    export const phi = 1.61;
+
+    export class RandomNumberGenerator {}
+
+    export function absolute(num: number) {
+      if (num < 0) return num * -1;
+      return num;
+    }
+  ```
+
+- Importing:
+  
+  ```typescript
+    import { pi, phi, absolute } from "./maths.js"; // name must be identical and enclosed by curly braces
+  ```
+
+#### Additional import syntax
+
+- Renaming imports:
+
+  ```typescript
+    import { pi as pie } from "./maths.js";
+  ```
+
+- Mix and match:
+
+  ```typescript
+    import RNGen, { pi as pie } from "./maths.js";
+  ```
+
+- Single namespace:
+
+  ```typescript
+    import * as math from "./maths.js";
+    
+    console.log(math.pi);
+    const positivePhi = math.absolute(math.phi);
+  ```
+
+- Import a file and *not* include any variables:
+
+  ```typescript
+    import "./maths.js";
+  ```
+
+  - `import` does nothing here but `maths.ts` is entirely evaluated (affecting other objects)
+
+#### TypeScript specific ES Module syntax
+
+- Exporting and importing types
+
+  ```typescript
+    // @filename: animal.ts
+    export type Cat = { breed: string; yearOfBirth: number; };
+
+    export interface Dog {
+      breeds: string[];
+      yearOfBirth: number;
+    }
+
+    // @filename: app.ts
+    import { Cat, Dog } from "./animal.js";
+    type Animals = Cat | Dog;
+  ```
+
+- *Only* import types
+
+  ```typescript
+    import type { Cat, Dog } from "./animal.js";
+  ```
+
+  - Allows non-TypeScript transpiler (Babel, swc, esbuild) to know what imports can be safely removed
+
+#### ES Module syntax with CommonJS behaviour
+
+- Imports using ES Module are the same as `require` used in CommonJS and AMD *for most cases*
+- This syntax ensures 1 to 1 match in TypeScript with CommonJS output:
+
+  ```typescript
+    import fs = require("fs");
+  ```
+
+### CommonJS Syntax
+
+- Exporting:
+
+```typescript
+  function hello() {
+    console.log("Hello");
+  }
+
+  module.exports = {
+    pi: 3.14,
+    absolute,
+  }
+```
+
+- Importing:
+
+```typescript
+  const maths = require("maths");
+  console.log(maths.pi);
+
+  // Or
+  const{ pi, absolute } = require("maths");
+  console.log(pi);
+```
+
+### TypeScript's module resolution options
+
+- **Module resolution** - process of taking a string from `import`/`require` and determining what file it refers to
+- Two resolution strategies:
+  - **Classic**
+    - Default when `module` compiler flag is not `commonjs`
+    - Included for backwards compatibility
+  - **Node**
+    - Replicates how Node.js works in CommonJS mode
+    - Includes additional checks for `.ts` and `.d.ts`
+
+### Typescript's module output options
+
+- Two options which affect the emitted JavaScript output:
+  - `target` - determines which JS features are downleveled
+  - `module` - determines what cose is used for modules to interact with each other
+- Modules communicate via a module loader (`module` determines which one is used)
+  - Module loader locates and executes all dependencies of a module before executing it
+
+### TypeScript namespaces
+
+- `namespaces` - TypeScript's own module format
+- Syntax has features for creating complex definition files
+- Not deprecated, but most features exist in ES Modules
+- Recommended to align with JavaScript directions
 
 ## Other Notes
 
