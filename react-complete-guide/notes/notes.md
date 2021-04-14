@@ -152,7 +152,9 @@
   - Only changes in `props` and/or `state` trigger re-rendering
   - `props` - allows passing of data from parent component to child
   - Access `item` property via `props.item`
+  ![Props](props-card.jpg)
   - `state` - used to change component state from within (only available to extended classes)
+  ![State](state-card.jpg)
   - Access state `someState` using `this.state.someState`
 - [React supported events](https://reactjs.org/docs/events.html#supported-events)
 - Use `this.setState` to mutate `state` variables
@@ -161,7 +163,13 @@
     1. The current state
     2. A function that allows us to update the state such that React is aware of it
   - Call `useState` multiple times for each state to avoid overwriting/merging issues
+  ![useState](useState-card.jpg)
   - No longer use `this` (not in a class)
 - Class vs functional component:
   - Class components **merges** the state
   - Functional components **overwrites** the state
+- Good practice to use stateless (dumb/presentational) over stateful components when possible
+
+## Section 4: Working with Lists and Conditionals
+
+- 
