@@ -190,3 +190,14 @@
 - Dynamic style must be in objects, i.e. `style={{ ... }}`
 - `for ... in ...` - objects
 - `for ... of ...` - arrays
+
+## Section 6: Styling React Components
+
+- Can't use kebab-case for CSS properties in JSX, must use camelCase
+- Use template literals to dynamically set classes
+
+  - e.g.
+
+  ```js
+    <div className={`form-control ${!isValid ? 'invalid' : ''}`}>
+  ```
