@@ -221,5 +221,60 @@
 ## Section 8: Time to Practice: A Complete Practice Project
 
 - Good idea to store errors in a JS object to use `error.title` and `error.message` etc.
+- Best practice to use the intended tag for the intended purpose (e.g. a `<button>` for buttons - not `<div>`)
 
 ## Section 9: Diving Deeper: Working with Fragments, Portals & Ref's
+
+### Fragments
+
+- JSX only able to return one root node - results in the `<div>` soup problem of too many nested divs
+
+  - Solution: use `Fragment`:
+
+  ```js
+  import React, { Fragment } from "react";
+
+  <Fragment>...</Fragment>;
+  ```
+
+  or
+
+  ```js
+  import React from "react";
+
+  <React.Fragment>...</React.Fragment>;
+  ```
+
+### Portals
+
+- Portals are a way of rendering certain elements/components elsewhere (usually within another element)
+- Most useful for overlays, backdrops, sidedrawers
+
+### Ref's
+
+- Refs are similar to states but intended for read-only purposes almost always
+
+- In general, **don't use refs to manipulate the DOM**
+- Exception: resetting user input (edge-case)
+  - OK because not really manipulating the DOM (e.g. not adding new elements or changing the CSS class)
+  - But rarely do this
+- Use if just wanting to quickly read a value but never changing it
+- Advantage: less code than states
+- Disadvantage: can't manipulate the DOM
+
+#### Controlled vs uncontrolled
+
+- When the state of a component is not controlled with React, it is **uncontrolled**
+
+  - typically using refs means it's uncontrolled (assuming no manipulation is done using the ref)
+
+- **Controlled** component - form data is handled by a React component
+
+  - Takes its current value through `props` and notifies changes through callbackes (e.g. `onChange`)
+  - A parent component "controls" it by handling the callback and managing its own state and passing the new values as props to the controlled component (aka a "dumb" component)
+
+- **Uncontrolled** components - form data is handled by the DOM itself
+
+  - Instead of writing an event handler for every state update, use a ref to get form values from the DOM
+  - Stores its own state internally
+  - Query the DOM using a ref to find its current value when needed
