@@ -190,14 +190,36 @@
 - Dynamic style must be in objects, i.e. `style={{ ... }}`
 - `for ... in ...` - objects
 - `for ... of ...` - arrays
+- Conditional elements are useful to show and hide elements (avoids assigning hide classes)
+  - To do this, use `{ a && b }` which will output `b` if `a` is true
+  - Or `{ c || d }` which will output `d` if `c` is false
 
 ## Section 6: Styling React Components
 
-- Can't use kebab-case for CSS properties in JSX, must use camelCase
-- Use template literals to dynamically set classes
+- CSS modules:
 
-  - e.g.
+  - CSS files need the `.module.css` file extension
+  - In the JS file
 
   ```js
-    <div className={`form-control ${!isValid ? 'invalid' : ''}`}>
+  import styles from "./Component.module.css";
   ```
+
+  - Add classes using `className={styles.name}`
+  - For kebab-case use `className={styles["my-class"]}`
+
+- Use template literals to dynamically set classes, e.g.
+
+```js
+  <div className={`form-control ${!isValid ? 'invalid' : ''}`}>
+
+  <div className={`${styles["form-control"]} ${!isValid && styles.invalid}`}>
+```
+
+## Section 7: Debugging React Apps
+
+## Section 8: Time to Practice: A Complete Practice Project
+
+- Good idea to store errors in a JS object to use `error.title` and `error.message` etc.
+
+## Section 9: Diving Deeper: Working with Fragments, Portals & Ref's

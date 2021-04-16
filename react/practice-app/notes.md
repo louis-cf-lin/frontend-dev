@@ -1,5 +1,0 @@
-- conditional elements are useful to avoid having to assign classes that display none
-- to do this, just use { ... && ... }
-- {a && b} will return b if a is true
-- {a || b} will return b if a is false
-- usually a good idea to store errors in a js object so u can do error.title and error.message etc.
