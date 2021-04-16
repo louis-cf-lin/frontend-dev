@@ -1,0 +1,6 @@
+- CSS modules
+- CSS files need the extension `.module.css`
+- import styles from "..."
+- add these classes using `className={styles.name}`
+  - Note: for classes with a hyphen use `className={styles["my-class"]}`
+- Dynamic classes using string literals: `className={`${styles["form-control"]} ${!isValid && styles.invalid}`}`
