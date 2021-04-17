@@ -155,8 +155,12 @@
 - `index.js` is first to be executed
 - One file per component
 - A component in React is just a JavaScript function that returns HTML code
+  ![why-components](./99-slides/why-components.jpg)
+- **Declarative** approach - define the desired target state(s) and let React figure out the actual JavaScript DOM instructions
+  ![understanding-jsx](./99-slides/understanding-jsx.jpg)
 - Use `className` in JSX
-- Avoid too much syntax in curly braces (string literal) - instead, do the processing first
+  ![component-tree](./99-slides/component-tree.jpg)
+- Avoid too much syntax in curly braces (string literal) - instead, do the processing first (outside the `return`)
 - Can use self-enclosing tag if no content between
 - `props.children` is reserved for the content between tags
 
@@ -168,15 +172,23 @@
   - 'Special variable'
   - Function to update this 'special variable'
 - State is separated on a per-component basis
+
   - I.e. the update function is only called once, and on the element it was called from
   - The entire component is rerun
+    ![state](./99-slides/state.jpg)
+
 - `useState()` is called once upon initialisation of the component, but is not rerun after (even when the component is updated)
 - Combining multiple states into a single object means all states have to be updated
   - Best practice to pass an anonymous function to ensure it is always receiving the latest state snapshot
   - Especially if the new state update depends on the previous
 - If `a(func)` takes a pointer to a function as input, then running `a(input1)` will call `func(input1)`
+  ![lifting-state-up](./99-slides/lifting-state-up.jpg)
+
 - **Controlled component** - both the value and changes to the value are handled by the parent component
 - Stateless/presentational/dumb - no internal state
+  ![stateful-stateless](./99-slides/stateful-stateless.jpg)
+
+![functional-vs-class](./99-slides/functional-vs-class.jpg)
 
 ## Section 5: Rendering Lists & Conditional Content
 
@@ -227,28 +239,24 @@
 
 ### Fragments
 
+![jsx-limitations](./99-slides/jsx-limitations.jpg)
+
 - JSX only able to return one root node - results in the `<div>` soup problem of too many nested divs
 
-  - Solution: use `Fragment`:
+  ![div-soup](./99-slides/div-soup.jpg)
 
-  ```js
-  import React, { Fragment } from "react";
-
-  <Fragment>...</Fragment>;
-  ```
-
-  or
-
-  ```js
-  import React from "react";
-
-  <React.Fragment>...</React.Fragment>;
-  ```
+  - Solution: use `Fragment`s
+    ![fragments](./99-slides/fragments.jpg)
 
 ### Portals
 
 - Portals are a way of rendering certain elements/components elsewhere (usually within another element)
 - Most useful for overlays, backdrops, sidedrawers
+
+![portals](./99-slides/portals-1.jpg)
+![portals](./99-slides/portals-2.jpg)
+![portals](./99-slides/portals-3.jpg)
+![portals](./99-slides/portals-4.jpg)
 
 ### Ref's
 
@@ -283,17 +291,11 @@
 
 ### Side Effects
 
+![side-effects](./99-slides/side-effects.jpg)
+
+![useeffect](./99-slides/useeffect.jpg)
+
 - `useEffect()` hook runs **AFTER** a component is updated
-
-  ```js
-    useEffect(() => { ... }, [ dependencies ]);
-  ```
-
-  - `() => { ... }` - a function that should be executed **AFTER** every component evaluation **IF** the specified dependencies changed
-  - `[ dependencies ]` - dependencies of the effect; the function only runs if the dependencies change
-  - No dependency array means the effect will run when ANYTHING changes
-  - An empty array of dependencies means the effect will only run once (after initialisation)
-
 - Commonly used to rerun logic when certain data (props, states) or anything is changed; i.e. whenever you have an action that should be executed in response to some other action
 - Should add "everything" used in the effect function as a dependency, with exceptions:
   - Don't need to add state updating functions
@@ -308,20 +310,13 @@
 ### Reducers
 
 - `useState()` may become hard or error-prone to use with more complex states (multiple states, multiple ways of changing it, dependencies on other states)
+  ![usereducer-state-management](./99-slides/usereducer-state-management.jpg)
+
 - `useReducer()` can be used as a replacement if require "more powerful state management"
 - Use when updating a state that depends on another state
 - Use when updating multiple states simultaneously
 
-  ```js
-  const [state, dispatchFn] = useReducer(reducerFn, initialState, initFn);
-  ```
-
-  - `state` - the state snapshot used in the component re-render/re-evaluation cycle
-  - `dispatchFn` - a function that can be used to dispatch a new action (i.e. trigger an update of the state)
-  - `reducerFn`
-    - `(prevState, action) => newState` - a function that is triggered automatically once an action is dispatched (via `dispatchFn()`); it receives the latest state snapshot and should return the new, updated state
-  - `initialState` - the initial state
-  - `initFn` - a function to set the initial state programmatically
+![usereducer](./99-slides/usereducer.jpg)
 
 - "Custom extension" of `useState()`
 - Good practice to optimise `useEffect()` so that it is only run when needed
@@ -329,19 +324,13 @@
   - E.g. use object destructuring to pull a property out of a state and use the extracted property as the dependency, **NOT** the entire state (with its multiple properties)
   - [Read more here](https://www.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/26043040#notes)
 
-- Generally, you'll know when you need to `useReducer()`: when `useState()` becomes cumbersome or you're getting a lot of bugs/unintended behaviours
-- `useState()`
-  - Main state management tool
-  - Great for independent pieces of state/data
-  - Great if state updates are easy and limited to a few kinds of updates
-- `useReducer()`
-  - Great if you need more power
-  - Should be considered if you have related pieces of state/data
-  - Can be helpful if you have more complex state updates
+![usereducer-vs-usestate](./99-slides/usereducer-vs-usestate.jpg)
 
 ### Context API
 
 - Method of storing data and accessing across components rather than passing through states and props
+  ![trees-dependencies](./99-slides/trees-dependencies.jpg)
+  ![context-api](./99-slides/context-api.jpg)
 - Look [here](./effects-reducers-context/src/App.js), [here](./effects-reducers-context/src/components/MainHeader/Navigation.js), and [here](./effects-reducers-context/src/store/auth-context.js) to find examples on how to use the context API
 - When to use:
   - Passing variables/functions/objects through multiple components
@@ -349,7 +338,6 @@
   - But in most cases, you will use `props`
 - Good idea to add dummy placeholders in the context creation object for better IDE suggestions
 - Can also bundle all the logic and data into a single context provider
-- **NOT** optimised for high frequency changes
-- **SHOULDN'T** be used to replace ALL component communications and props
+  ![context-limitations](./99-slides/context-limitations.jpg)
 
-### Rules of hooks
+![hook-rules](./99-slides/hook-rules.jpg)
