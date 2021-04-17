@@ -278,3 +278,76 @@
   - Instead of writing an event handler for every state update, use a ref to get form values from the DOM
   - Stores its own state internally
   - Query the DOM using a ref to find its current value when needed
+
+## Section 10: Side Effects, Reducers & the Context API
+
+### Side Effects
+
+- `useEffect()` hook runs **AFTER** a component is updated
+
+  ```js
+    useEffect(() => { ... }, [ dependencies ]);
+  ```
+
+  - `() => { ... }` - a function that should be executed **AFTER** every component evaluation **IF** the specified dependencies changed
+  - `[ dependencies ]` - dependencies of the effect; the function only runs if the dependencies change
+  - No dependency array means the effect will run when ANYTHING changes
+  - An empty array of dependencies means the effect will only run once (after initialisation)
+
+- Commonly used to rerun logic when certain data (props, states) or anything is changed; i.e. whenever you have an action that should be executed in response to some other action
+- Should add "everything" used in the effect function as a dependency, with exceptions:
+  - Don't need to add state updating functions
+  - Don't need to add "built-in" APIs or function (e.g. `fetch()`, `localStorage` )
+  - Don't need to add variable or functions defined outside of the component
+- In general, dependencies are things that could change because the component (or parent component) is re-rendered
+- See [here for an example](https://www.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/25871518#notes)
+- **Cleanup function** does not run on the first side effect execution, but will run BEFORE everytime thereafter
+  - Implemented as a function that is returned
+  - Useful when combined with debouncing
+
+### Reducers
+
+- `useState()` may become hard or error-prone to use with more complex states (multiple states, multiple ways of changing it, dependencies on other states)
+- `useReducer()` can be used as a replacement if require "more powerful state management"
+- Use when updating a state that depends on another state
+- Use when updating multiple states simultaneously
+
+  ```js
+  const [state, dispatchFn] = useReducer(reducerFn, initialState, initFn);
+  ```
+
+  - `state` - the state snapshot used in the component re-render/re-evaluation cycle
+  - `dispatchFn` - a function that can be used to dispatch a new action (i.e. trigger an update of the state)
+  - `reducerFn`
+    - `(prevState, action) => newState` - a function that is triggered automatically once an action is dispatched (via `dispatchFn()`); it receives the latest state snapshot and should return the new, updated state
+  - `initialState` - the initial state
+  - `initFn` - a function to set the initial state programmatically
+
+- "Custom extension" of `useState()`
+- Good practice to optimise `useEffect()` so that it is only run when needed
+
+  - E.g. use object destructuring to pull a property out of a state and use the extracted property as the dependency, **NOT** the entire state (with its multiple properties)
+  - [Read more here](https://www.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/26043040#notes)
+
+- Generally, you'll know when you need to `useReducer()`: when `useState()` becomes cumbersome or you're getting a lot of bugs/unintended behaviours
+- `useState()`
+  - Main state management tool
+  - Great for independent pieces of state/data
+  - Great if state updates are easy and limited to a few kinds of updates
+- `useReducer()`
+  - Great if you need more power
+  - Should be considered if you have related pieces of state/data
+  - Can be helpful if you have more complex state updates
+
+### Context API
+
+- Method of storing data and accessing across components rather than passing through states and props
+- Look [here](./effects-reducers-context/src/App.js), [here](./effects-reducers-context/src/components/MainHeader/Navigation.js), and [here](./effects-reducers-context/src/store/auth-context.js) to find examples on how to use the context API
+- When to use:
+  - Passing variables/functions/objects through multiple components
+  - Forwarding to an element that does something specific (and always will)
+  - But in most cases, you will use `props`
+- Good idea to add dummy placeholders in the context creation object for better IDE suggestions
+- Can also bundle all the logic and data into a single context provider
+- **NOT** optimised for high frequency changes
+- **SHOULDN'T** be used to replace ALL component communications and props
