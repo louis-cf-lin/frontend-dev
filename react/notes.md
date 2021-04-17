@@ -351,3 +351,5 @@
 - Can also bundle all the logic and data into a single context provider
 - **NOT** optimised for high frequency changes
 - **SHOULDN'T** be used to replace ALL component communications and props
+
+### Rules of hooks
