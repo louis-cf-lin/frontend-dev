@@ -260,9 +260,9 @@
 
 ### Ref's
 
-- Refs are similar to states but intended for read-only purposes almost always
+- Refs are similar to states but almost always intended for read-only purposes
 
-- In general, **don't use refs to manipulate the DOM**
+- In general, **don't use `ref`s to manipulate the DOM**
 - Exception: resetting user input (edge-case)
   - OK because not really manipulating the DOM (e.g. not adding new elements or changing the CSS class)
   - But rarely do this
@@ -340,4 +340,21 @@
 - Can also bundle all the logic and data into a single context provider
   ![context-limitations](./99-slides/context-limitations.jpg)
 
+- Can "forward" refs - create components capable of receiving `ref` props that can then be "forwarded" to children
+  - Export functions/data within a component to parent components, to then use it in the parent component
+  - Similar to lifting state up
+  - **Avoid at all cost** - not used for 99.9% of cases but may be an elegant solution
+  - See [Input.js](./10-side-effects-reducers-context-api/src/components/UI/Input/Input.js) for writing a forward ref and [Login.js](./10-side-effects-reducers-context-api/src/components/Login/Login.js) to apply it
+
 ![hook-rules](./99-slides/hook-rules.jpg)
+
+## Section 11: Practice Project: Building a Food Order App
+
+- Use `htmlFor`, i.e. `<label htmlFor={...}></label>`
+- To pass all props: `<div {...props}></div>`
+- All-caps for reducer actions
+- Call `event.preventDefault()` to prevent default behaviour (especially on vanilla HTML properties like `onSubmit`)
+- Always use `current` when dealing with `ref`s
+- `.bind()` allows preconfiguration for future function executions
+- To create a real copy of an array, use `realCopy = [...someArray]`
+- Similarly for objects, `realObject = {...someObject}`
