@@ -358,3 +358,99 @@
 - `.bind()` allows preconfiguration for future function executions
 - To create a real copy of an array, use `realCopy = [...someArray]`
 - Similarly for objects, `realObject = {...someObject}`
+
+## Section 12: A Look Behind the Scenes of React & Optimisation Techniques
+
+- States and state changes will cause components to change if it updates its props
+- When a component is re-executed, everything in it is re-run
+  - Including all children and children of those etc.
+- Prevent unnecessary re-evaluations of components with `React.memo()` on the child component
+
+  ```js
+  export default React.memo(MyComponent);
+  ```
+
+  - **BE CAREFUL** when using `React.memo()` - it has it's own performance costs of storing and comparing previous and new components
+  - Use when you have a large component tree and changes are being made at a higher level but not within it
+  - Great if you can cut off large branches from unnecessary evaluations
+
+- However, `React.memo()` will not prevent functions from being re-executed, since those functions will be _new instances_
+
+  - So if a function handle is passed as a prop to a child component, that child component **will** be re-evaluated
+  - Primitive comparisons are the same, e.g.
+
+  ```js
+  false === false; // true
+  "hi" === "hi"; // true
+  ```
+
+  - For arrays, objects and functions this is not the same
+
+  ```js
+  [1, 2, 3] === [1, 2, 3]; // false
+  ```
+
+- Save functions and prevent recreation of the same function by using `useCallback()`
+
+  ```js
+  import { useCallback } from "react";
+
+  const toggleHandler = useCallback(() => {
+    setShow((shown) => !shown);
+  }, []);
+  ```
+
+  - **BE CAREFUL** when using `useCallback()` - it creates a closure so local variables are locked in and do not change
+  - Solution: variables that are allowed to change should be added to the dependency array
+  - React will create _new_ function closures if any of the dependency variables are changed
+
+- React schedules state changes
+
+  - This is very fast and usually a non-issue
+  - However, if a new state depends on the previous state, use the function-form syntax to ensure this is done correctly
+
+  ```js
+  setNewState((prevState) => !prevState);
+  ```
+
+  - This can be solved using side effects when a new state depends on another state (and we want the new state to change if the other state changes)
+
+![state-update-scheduling](./99-slides/state-update-scheduling.jpg)
+
+- Multiple state updates in the same synchronous call (e.g. same function) will be batched into one update by React, i.e. component updates **once**
+
+- `useMemo()` stores objects and arrays to prevent re-execution
+
+  - Just like how `useCallback()` stores functions
+  - Especially useful for intensive methods like `.sort()`
+
+  ```js
+  const sortedList = useMemo(() => {
+    return props.items.sort((a, b) => a - b);
+  }, [props.items]);
+  ```
+
+  - Above function will only run if `props.items` has changed
+  - This will still run if the parent component is rerun because the array passed to the component is _new_ every call
+  - Solution: use `useMemo()` in the parent component as well
+
+  ```js
+    <Demo items={useMemo(() => [1, 2, 3]), []}>
+  ```
+
+  - Similarly, be wary when using - there are tradeoffs!
+
+## Section 13: An Alternative Way of Building Components: Class-Based Components
+
+![class-based-cmp](./99-slides/class-based-cmp.jpg)
+
+- States
+
+  - All states of a component bundled into a single object
+  - Changes are merged, not overwritten
+
+- Must bind function calls to `this`
+
+![class-based-cmp-lifecycle](./99-slides/class-based-cmp-lifecycle.jpg)
+
+![class-vs-functional](./99-slides/class-vs-functional.jpg)
