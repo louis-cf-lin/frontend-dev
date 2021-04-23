@@ -454,3 +454,9 @@
 ![class-based-cmp-lifecycle](./99-slides/class-based-cmp-lifecycle.jpg)
 
 ![class-vs-functional](./99-slides/class-vs-functional.jpg)
+
+## Section 14: Sending Http Requests (e.g. Connecting to a Database)
+
+![database](./99-slides/database.jpg)
+
+- Handle loading and data states using states
