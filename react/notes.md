@@ -462,3 +462,34 @@
 - Handle loading and data states using states
 - When using `useEffect()` to run a function (or send an HTTP request) once on initialisation, make sure the function is wrapped in `useCallback()` to ensure the pointer is the same instead of a _new_ one being created (and thus unintentionally triggering `useEffect()`)
 - `JSON.stringify()` takes a JS array or object and turns it into JSON format
+
+## Section 15: Building Custom React Hooks
+
+![hook-rules](./99-slides/hook-rules.jpg)
+
+![custom-hooks](./99-slides/custom-hooks.jpg)
+
+- Hard rule: hook names **MUST** start with `use`
+- States and data within a custom hook is tied to the component which called the hook
+  - The hook is re-run for every component
+  - Hook states are not shared, they are unique to the component which called them
+- Pass states in a hook to a component by returning the state in the hook and assigning it in the component
+- Variables with the same name as property can be defined once, e.g.
+
+```js
+const obj = {
+  var,
+  arr,
+  func,
+};
+```
+
+- Be careful to avoid infinite loops caused by states in custom hooks
+  - Example:
+    - A component is initialised and a hook is executed
+    - The hook changes some state within it
+    - The state is tied to the component so the component re-evaluates
+    - The hook is re-executed
+    - ...
+  - Solution: wrap the state-changing functions in the custom hook with `useCallback()`
+    - This may sometimes require using `useCallback()` both in the custom hook and in the component
