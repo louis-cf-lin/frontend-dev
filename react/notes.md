@@ -474,6 +474,8 @@
   - The hook is re-run for every component
   - Hook states are not shared, they are unique to the component which called them
 - Pass states in a hook to a component by returning the state in the hook and assigning it in the component
+- Similarly, pass state-changing functions to a component by returning it from the hook
+- When destructuring returned values (from the hook), you can assign aliases to rename them
 - Variables with the same name as property can be defined once, e.g.
 
 ```js
@@ -493,3 +495,13 @@ const obj = {
     - ...
   - Solution: wrap the state-changing functions in the custom hook with `useCallback()`
     - This may sometimes require using `useCallback()` both in the custom hook and in the component
+
+## Section 16: Working with Forms & User Input
+
+![forms](./99-slides/forms.jpg)
+![validating-forms](./99-slides/validating-forms.jpg)
+
+- Make sure the form submission handler has `event.preventDefault()` to prevent the page being reloaded
+- Look at Formik for form validation library
+
+## Section 17: Practice Project: Adding Http & Forms to the Food Order App
