@@ -460,3 +460,5 @@
 ![database](./99-slides/database.jpg)
 
 - Handle loading and data states using states
+- When using `useEffect()` to run a function (or send an HTTP request) once on initialisation, make sure the function is wrapped in `useCallback()` to ensure the pointer is the same instead of a _new_ one being created (and thus unintentionally triggering `useEffect()`)
+- `JSON.stringify()` takes a JS array or object and turns it into JSON format
