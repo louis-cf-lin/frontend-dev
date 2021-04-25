@@ -505,3 +505,15 @@ const obj = {
 - Look at Formik for form validation library
 
 ## Section 17: Practice Project: Adding Http & Forms to the Food Order App
+
+## Section 18: Diving into Redux (An Alternative to the Context API)
+
+**Redux** - a state management system for cross-component or app-wide state
+
+![app-wide-state](./99-slides/app-wide-state.jpg)
+
+![context-disadvantages](./99-slides/context-disadvantages.jpg)
+
+![core-redux-concepts](./99-slides/core-redux-concepts.jpg)
+
+![reducer-function](./99-slides/reducer-function.jpg)
