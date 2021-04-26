@@ -534,3 +534,10 @@ npm install @reduxjs/toolkit
 - `createSlice()` **does** allows us to mutate the state (and Redux Toolkit handles it behind the scenes)
 
 ## Section 19: Advanced Redux
+
+![side-effects-async-redux](./99-slides/side-effects-async-redux.jpg)
+
+![thunk](.//99-slides/thunk.jpg)
+
+- i.e. running other code before calling `dispatch()`
+- Use the Redux DevTools extension for development and debugging
