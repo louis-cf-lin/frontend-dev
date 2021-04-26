@@ -517,3 +517,20 @@ const obj = {
 ![core-redux-concepts](./99-slides/core-redux-concepts.jpg)
 
 ![reducer-function](./99-slides/reducer-function.jpg)
+
+- Remember to `npm install redux react-redux`
+  - Remember to `import` within the redux `index.js` and the highest level `index.js`
+  - Highest level `index.js` also needs to have the `<Provider>` wrap
+  - See section example
+- `useSelector()` is useful for extracting certain properties of a state and automatically subscribes the data store to the component
+- Redux reducers overwrite states - ensure all states are always set when updating any state
+- **NEVER** mutate the existing state - always return a brand new one in the reducer
+- Strongly recommend using React Toolkit
+
+```terminal
+npm install @reduxjs/toolkit
+```
+
+- `createSlice()` **does** allows us to mutate the state (and Redux Toolkit handles it behind the scenes)
+
+## Section 19: Advanced Redux
