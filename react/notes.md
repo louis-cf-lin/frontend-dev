@@ -541,3 +541,17 @@ npm install @reduxjs/toolkit
 
 - i.e. running other code before calling `dispatch()`
 - Use the Redux DevTools extension for development and debugging
+
+## Section 20: Building a Multi-Page SPA with React Router
+
+![routing](./99-slides/routing.jpg)
+![multipage-routing](./99-slides/multipage-routing.jpg)
+![building-spa](./99-slides/building-spa.jpg)
+
+- Use React router
+
+```terminal
+npm install react-router-dom
+```
+
+- Use semantic tags
