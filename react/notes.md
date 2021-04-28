@@ -555,3 +555,5 @@ npm install react-router-dom
 ```
 
 - Use semantic tags
+- `<Switch>` stops at the first match
+- Use `exact` to match full path, i.e. only show the `Route` if the `path` is an exact match to URL
