@@ -603,4 +603,8 @@ npm run build
 ```
 
 - All build files can be found in the `build` folder
--
+
+### Routing
+
+- For client-side routing, always respond with same response
+- Don't care about the route requested
