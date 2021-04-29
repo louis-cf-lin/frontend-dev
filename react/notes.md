@@ -610,3 +610,11 @@ npm run build
 
 - For client-side routing, always respond with same response
 - Don't care about the route requested
+
+## Section 22: A (Pretty Deep Dive) Introduction to Next.js
+
+- NextJS - a fullstack framework for ReactJS
+- Solves common problems and makes building React apps easier
+
+![nextjs](./99-slides/nextjs.jpg)
+![nextjs](./99-slides/nextjs-2.jpg)
