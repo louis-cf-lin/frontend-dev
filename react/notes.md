@@ -569,3 +569,38 @@ npm install react-router-dom
   - The path is the value that is encoded - useful for setting dynamic routes
   - The URL is the actual link that's displayed
   - NOTE: `path` should use `` `${match.path}` `` and `to` should use `` `${match.url}` ``
+
+## Section 21: Deploying React Apps
+
+### Deployment steps
+
+1. Test code
+2. Optimise code
+3. Build app for production
+4. Upload production code to server
+5. Configure server
+
+### Lazy loading
+
+- Load code only when it's needed
+
+```js
+import React, { Suspense } from "react";
+
+const Component = React.lazy(() => import("./path/to/Component"));
+
+...
+
+<Suspense fallback={...}>
+  ...
+</Suspense>
+```
+
+### Building for production
+
+```terminal
+npm run build
+```
+
+- All build files can be found in the `build` folder
+-
