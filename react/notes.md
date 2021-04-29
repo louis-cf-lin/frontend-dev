@@ -555,5 +555,17 @@ npm install react-router-dom
 ```
 
 - Use semantic tags
-- `<Switch>` stops at the first match
-- Use `exact` to match full path, i.e. only show the `Route` if the `path` is an exact match to URL
+- `<Switch>` stops at the first match (match is also true if the full path contains part of the path)
+  - Use `exact` to match full path, i.e. only show the `Route` if the `path` is an exact match to URL
+  - Alternatively, switch the order of the components
+- Putting `path='*'` provides the fallback option (i.e. 404 error)
+- `useHistory` hook allows changing URL through the `push()` and `replace()` methods
+  - `push` allows going back (adds a new page)
+  - `replace` does not (redirect)
+  - Both will also cause all components to be re-rendered
+- `useLocation` hook provides details about current URL (useful for search queries)
+- Nested routes are useful for conditionally loading different content (similar to `<Switch>` but simpler)
+- `useRouteMatch` hook provides the current path and URL
+  - The path is the value that is encoded - useful for setting dynamic routes
+  - The URL is the actual link that's displayed
+  - NOTE: `path` should use `` `${match.path}` `` and `to` should use `` `${match.url}` ``
