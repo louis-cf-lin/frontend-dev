@@ -606,5 +606,7 @@ npm run build
 
 ### Routing
 
+![server-client-routing](./99-slides/server-client-routing.jpg)
+
 - For client-side routing, always respond with same response
 - Don't care about the route requested
