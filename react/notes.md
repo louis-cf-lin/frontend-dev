@@ -618,3 +618,46 @@ npm run build
 
 ![nextjs](./99-slides/nextjs.jpg)
 ![nextjs](./99-slides/nextjs-2.jpg)
+
+- NextJS only pre-renders the first render cycle
+
+![pre-rendering](./99-slides/pre-rendering.jpg)
+
+- Solution:
+
+  ```js
+  export async function getStaticProps() {
+    // run anything
+
+    return {
+      props: {
+        ...: ...,
+      },
+      revalidate: ...
+    };
+  }
+  ```
+
+  - `revalidate` is the number of seconds NextJS will wait until it regenerates the page for an incoming request (incremental static regeneration)
+  - This means the page will be generated at build time AND regerenated every few seconds on the server side if there are new requests
+  - How often to regenerate depends on your data
+
+- To regenerate content on server-side for every new request, use:
+
+```js
+export async function getServerSideProps(context) {
+  const req = context.req;
+  const res = context.res;
+  // ...
+  return {
+    props: {
+      ...: ...
+    }
+  };
+}
+```
+
+- `getStaticProps()` vs `getServerSideProps()`
+  - If need access to request and response OR have data that changes multiple times per second - `getServerSideProps()`
+  - Otherwise - `getStaticProps()` (loads faster from CDN)
+- Files in the `api` folder are server-side functions
