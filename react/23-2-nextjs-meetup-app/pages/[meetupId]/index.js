@@ -34,7 +34,7 @@ export async function getStaticPaths() {
   client.close();
 
   return {
-    fallback: false, // false = all supported pages are defined (will show 404); true = generated undefined pages dynamically
+    fallback: "blocking", // false = all supported pages are defined (will show 404); true/'blocking' = generate undefined pages dynamically; true will load as it comes in, blocking will wait and show all at once
     paths: meetups.map((meetup) => ({
       params: { meetupId: meetup._id.toString() },
     })),
