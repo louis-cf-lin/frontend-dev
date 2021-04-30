@@ -661,3 +661,4 @@ export async function getServerSideProps(context) {
   - If need access to request and response OR have data that changes multiple times per second - `getServerSideProps()`
   - Otherwise - `getStaticProps()` (loads faster from CDN)
 - Files in the `api` folder are server-side functions
+- The entire `getStaticProps()` and `getServerSideProps()` functions are also server-side-only functions
